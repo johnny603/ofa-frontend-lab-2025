@@ -3,12 +3,12 @@
 	padding: 10px;
   }
   
-  #fact-display {
+#fact-display {
 	font-weight: bold;
 	margin-bottom: 10px;
-  }
+}
   
-  #prev-btn, #next-btn {
+#prev-btn, #next-btn {
 	padding: 8px 12px;
 	margin: 0 5px;
 	font-size: 14px;
@@ -17,12 +17,14 @@
 	color: white;
 	border: none;
 	border-radius: 5px;
-  }
+}
   
-  #prev-btn:hover, #next-btn:hover {
+#prev-btn:hover, #next-btn:hover {
 	background-color: #005f87;
-  }
-  body {
+
+}
+
+body {
 	background-color: #f0f8ff;
 	font-family: Arial, sans-serif;
 }
@@ -38,6 +40,6 @@
 }
 
 img {
-	border-radius: 10px;
-	margin: 15px 0;
+	max-width: 50%;
+	height: 50%;
 }

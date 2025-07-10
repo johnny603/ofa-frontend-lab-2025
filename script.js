@@ -1,38 +1,62 @@
-// Fun facts array
-const facts = [
+// ----- Fun facts arrays -----
+const penguinFacts = [
   "They hop on rocks.",
   "They have yellow eyebrow feathers.",
   "They're strong swimmers and can dive deep."
 ];
 
+const dolphinFacts = [
+  "Pink river dolphins get pinker with age due to scar tissue from rough play or fights.",
+  "They are highly intelligent and have the largest brain-to-body size ratio of all freshwater dolphins.",
+  "These dolphins can turn their heads 180 degrees thanks to unfused neck vertebrae."
+];
+
+const bearFacts = [
+  "Kodiak bears are one of the largest bear species in the world, rivaling polar bears in size.",
+  "They can weigh up to 1,500 pounds and stand over 10 feet tall when on their hind legs.",
+  "Despite their size, Kodiak bears are excellent swimmers and can run up to 30 miles per hour."
+];
+
 let currentIndex = 0;
+let currentFacts = [];
 
-// Wait for DOM to load
+// Wait for the DOM to be fully loaded
 document.addEventListener("DOMContentLoaded", function () {
-  const heading = document.querySelector("h1");
+  // Get the page's animal from the <h1> heading
+  const headingEl = document.querySelector("h1");
+  const headingText = headingEl.textContent.toLowerCase();
 
-  heading.addEventListener("click", function () {
-    heading.style.color = "#0077b6";
-    alert("You clicked the penguin's name!");
-  });
+  // Determine which fun facts to load — note lowercase checks to match headingText
+  if (headingText.includes("penguin")) {
+    currentFacts = penguinFacts;
+  } else if (headingText.includes("dolphin")) {
+    currentFacts = dolphinFacts;
+  } else if (headingText.includes("bear")) {
+    currentFacts = bearFacts;
+  }
 
-  // Carousel setup
+  // Get DOM elements
   const factDisplay = document.getElementById("fact-display");
   const prevBtn = document.getElementById("prev-btn");
   const nextBtn = document.getElementById("next-btn");
 
-  // Show the first fact
-  factDisplay.textContent = facts[currentIndex];
+  // Safety check in case HTML elements are missing
+  if (!factDisplay || !prevBtn || !nextBtn || currentFacts.length === 0) {
+    console.warn("Carousel elements not found or no facts available.");
+    return;
+  }
 
-  // Handle Previous
+  // Show the first fun fact
+  factDisplay.textContent = currentFacts[currentIndex];
+
+  // Button event listeners
   prevBtn.addEventListener("click", function () {
-    currentIndex = (currentIndex - 1 + facts.length) % facts.length;
-    factDisplay.textContent = facts[currentIndex];
+    currentIndex = (currentIndex - 1 + currentFacts.length) % currentFacts.length;
+    factDisplay.textContent = currentFacts[currentIndex];
   });
 
-  // Handle Next
   nextBtn.addEventListener("click", function () {
-    currentIndex = (currentIndex + 1) % facts.length;
-    factDisplay.textContent = facts[currentIndex];
+    currentIndex = (currentIndex + 1) % currentFacts.length;
+    factDisplay.textContent = currentFacts[currentIndex];
   });
 });
