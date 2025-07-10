@@ -1,0 +1,43 @@
+#carousel {
+	margin: 20px auto;
+	padding: 10px;
+  }
+  
+  #fact-display {
+	font-weight: bold;
+	margin-bottom: 10px;
+  }
+  
+  #prev-btn, #next-btn {
+	padding: 8px 12px;
+	margin: 0 5px;
+	font-size: 14px;
+	cursor: pointer;
+	background-color: #0077b6;
+	color: white;
+	border: none;
+	border-radius: 5px;
+  }
+  
+  #prev-btn:hover, #next-btn:hover {
+	background-color: #005f87;
+  }
+  body {
+	background-color: #f0f8ff;
+	font-family: Arial, sans-serif;
+}
+
+.container {
+	max-width: 600px;
+	margin: 0 auto;
+	text-align: center;
+	padding: 20px;
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+img {
+	border-radius: 10px;
+	margin: 15px 0;
+}
