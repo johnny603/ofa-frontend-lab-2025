@@ -1,17 +1,20 @@
 #carousel {
 	margin: 20px auto;
 	padding: 10px;
+	text-align: center;
+	margin-bottom: 30px;
   }
   
 #fact-display {
 	font-weight: bold;
 	margin-bottom: 10px;
+	text-align: center;
 }
   
 #prev-btn, #next-btn {
 	padding: 8px 12px;
 	margin: 0 5px;
-	font-size: 14px;
+	font-size: 20px;
 	cursor: pointer;
 	background-color: #0077b6;
 	color: white;
@@ -21,11 +24,11 @@
   
 #prev-btn:hover, #next-btn:hover {
 	background-color: #005f87;
-
+	transition: background-color 0.3s ease;
 }
 
 body {
-	background-color: #f0f8ff;
+	background-color: #9cd9d8;
 	font-family: Arial, sans-serif;
 }
 
@@ -34,12 +37,43 @@ body {
 	margin: 0 auto;
 	text-align: center;
 	padding: 20px;
-	background-color: white;
+	background-color: #c9f5f4;
 	border-radius: 10px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	color: #333;
 }
 
-img {
-	max-width: 50%;
-	height: 50%;
+.container img {
+	width: 100%;
+	height: auto;
+	display: block;
+	margin: 0 auto;
+	border-radius: 20px;
+	border: 5px solid black;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	transition: transform 0.3s ease;
+  }
+
+  .container img:hover {
+	transform: scale(1.02);
+  }
+  
+  
+
+footer {
+  position: relative;
+  bottom: 0;
+  right: 0;
+  padding: 10px;
+  color: grey;
+  text-align: center;
 }
+
+.container p {
+	font-size: 16px;
+}
+
+.container h1 {
+	font-size: 42px;
+}
+
