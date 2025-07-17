@@ -1,0 +1,65 @@
+body {
+	background-color: #cccccc;
+	font-family: Arial, sans-serif;
+	text-align: center;
+}
+
+.container {
+	margin: 0 auto;
+	padding: 20px;
+	max-width: 600px;
+	border-radius: 10px;
+	/* Using more muted, less bright colors */
+	background: linear-gradient(to right, lightcoral, sandybrown, khaki, darkseagreen, lightblue, mediumpurple, plum);
+	background-size: 200% 200%;
+	animation: rainbow 20s ease infinite;	color: #333;
+}
+
+.container.paused {
+	animation-play-state: paused;
+}
+
+.container p {
+	color: black;
+	font-weight: bold;
+	font-size: 16px;
+}
+
+h1 {
+	font-size: 42px;
+}
+
+/* New style for the standalone Home link */
+.home-nav {
+	margin: 10px 0 20px 0;
+}
+
+.home-nav a {
+	text-decoration: none;
+	color: #00008B;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #00008B;
+    font-weight: bold;
+}
+
+@keyframes rainbow {
+	0% {background-position: 0% 50%;}
+	50% {background-position: 100% 50%;}
+	100% {background-position: 0% 50%;}
+}
