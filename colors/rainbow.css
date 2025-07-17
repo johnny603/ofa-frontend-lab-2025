@@ -63,3 +63,12 @@ nav ul li a {
 	50% {background-position: 100% 50%;}
 	100% {background-position: 0% 50%;}
 }
+
+footer {
+	position: relative;
+	bottom: 0;
+	right: 0;
+	padding: 10px;
+	color: black;
+	text-align: center;
+  }
