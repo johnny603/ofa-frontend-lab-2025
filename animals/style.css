@@ -3,7 +3,7 @@
 	padding: 10px;
 	text-align: center;
 	margin-bottom: 30px;
-  }
+}
   
 #fact-display {
 	font-weight: bold;
@@ -52,67 +52,65 @@ body {
 	border: 5px solid black;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 	transition: transform 0.3s ease;
-  }
-
-  .container img:hover {
-	transform: scale(1.02);
-  }
-  
-  
-
-footer {
-  width: 100%;
-  text-align: center;
-  margin-top: 20px;
 }
 
+.container img:hover {
+	transform: scale(1.02);
+}
+
+footer {
+	width: 100%;
+	text-align: center;
+	margin-top: 20px;
+	position: relative;
+	bottom: 0;
+	right: 0;
+	padding: 10px;
+	color: grey;
+}
+
+/* Fix: properly close the media query blocks */
 @media (max-width: 768px) {
-  .container {
-    margin: 10px;
-    padding: 15px;
-  }
+	.container {
+		margin: 10px;
+		padding: 15px;
+	}
 
-  .container h1 {
-    font-size: 32px;
-  }
+	.container h1 {
+		font-size: 32px;
+	}
 
-  .container p {
-    font-size: 14px;
-  }
+	.container p {
+		font-size: 14px;
+	}
 
-  #prev-btn, #next-btn {
-    padding: 6px 10px;
-    font-size: 18px;
-  }
+	#prev-btn, #next-btn {
+		padding: 6px 10px;
+		font-size: 18px;
+	}
 }
 
 @media (max-width: 480px) {
-  .container {
-    margin: 5px;
-    padding: 10px;
-  }
+	.container {
+		margin: 5px;
+		padding: 10px;
+	}
 
-  .container h1 {
-    font-size: 28px;
-  }
+	.container h1 {
+		font-size: 28px;
+	}
 
-  .container p {
-    font-size: 12px;
-  }
+	.container p {
+		font-size: 12px;
+	}
 
-  #prev-btn, #next-btn {
-    padding: 4px 8px;
-    font-size: 16px;
-  }
-}{
-  position: relative;
-  bottom: 0;
-  right: 0;
-  padding: 10px;
-  color: grey;
-  text-align: center;
+	#prev-btn, #next-btn {
+		padding: 4px 8px;
+		font-size: 16px;
+	}
 }
 
+/* Base text sizes */
 .container p {
 	font-size: 16px;
 }
@@ -120,4 +118,3 @@ footer {
 .container h1 {
 	font-size: 42px;
 }
-
