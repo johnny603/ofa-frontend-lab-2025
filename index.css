@@ -21,3 +21,33 @@ footer {
     color: grey;
     text-align: center;
   }
+
+  .about-me {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #fff8dc;
+    border-top: 2px solid #ccc;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.about-me p {
+    max-width: 600px;
+    margin: auto;
+    color: #333;
+}
+
+.social-icons {
+    margin-top: 10px;
+}
+
+.social-icons a img {
+    width: 32px;
+    height: 32px;
+    margin: 0 8px;
+    transition: transform 0.2s ease;
+}
+
+.social-icons a img:hover {
+    transform: scale(1.2);
+}
