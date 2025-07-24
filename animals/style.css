@@ -118,3 +118,7 @@ footer {
 .container h1 {
 	font-size: 42px;
 }
+
+a {
+	text-decoration: none;
+}
