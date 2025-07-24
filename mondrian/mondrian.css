@@ -44,10 +44,7 @@
     background-color: blue;
     grid-row: span 3;
   }
-  
-  .item:nth-child(3) {
-    background-color: yellow;
-  }
+
   
   .item:nth-child(5),
   .item:nth-child(8),
@@ -110,6 +107,20 @@
     background-color: green;
     grid-row: span 1;
 }
+
+.item:nth-child(7) {
+  background-color:black;
+  grid-column: span 1;
+}
+
+.item:nth-child(3) {
+  background-color: yellow;
+  border-radius: 30px;    
+  font-size: medium;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+  padding: 10px 20px;
+  margin: 0 10px;
+}
   
   /* Responsive scaling */
   @media (max-width: 768px) {
@@ -119,7 +130,11 @@
     }
   
     .item {
-      font-size: 18px;
+      font-size: 20px;
     }
+  }
+  
+  a {
+    text-decoration: none;
   }
   

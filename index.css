@@ -51,3 +51,8 @@ footer {
 .social-icons a img:hover {
     transform: scale(1.2);
 }
+
+a {
+    text-decoration: none;
+  }
+  
