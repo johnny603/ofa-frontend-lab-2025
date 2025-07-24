@@ -121,6 +121,11 @@
   padding: 10px 20px;
   margin: 0 10px;
 }
+
+.item:nth-child(10) {
+  background-color: orange;
+  border-radius: 20%;
+}
   
   /* Responsive scaling */
   @media (max-width: 768px) {
@@ -130,11 +135,3 @@
     }
   
     .item {
-      font-size: 20px;
-    }
-  }
-  
-  a {
-    text-decoration: none;
-  }
-  
