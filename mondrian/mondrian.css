@@ -135,17 +135,3 @@
     }
   
     .item {
-      font-size: 20px;
-    }
-  }
-  
-  a {
-    text-decoration: none;
-  }
-  
-  ul {
-    list-style-type: none;
-    padding-left: 0; /* removes the default left padding */
-    margin: 0;        /* optional: remove default margin */
-  }
-  
