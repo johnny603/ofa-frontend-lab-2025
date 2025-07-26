@@ -3,14 +3,24 @@
     background-color: blanchedalmond;
 }
 
-.container a {    
+.container a {
     border-radius: 25px;    
     font-size: small;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 2);
     padding: 10px 20px;
     margin: 0 10px;
     background-color: aliceblue;  
+    display: inline-block;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    cursor: pointer;
+    position: relative;
 }
+
+.container a:hover {
+    transform: translateY(2px);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 1);
+}
+
 
 
 footer {
