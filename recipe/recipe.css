@@ -1,0 +1,79 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fdf6f0;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .box {
+    grid-column: 2;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Add hover effect using :hover pseudo-selector */
+  .box:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Make the first box (title) styled differently */
+  .box:first-child {
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+    color: #c1440e;
+    background-color: transparent;
+    box-shadow: none;
+    padding-bottom: 10px;
+  }
+  
+  /* Add border to each list item except the last one using :not(:last-child) */
+  .ingredients ul li:not(:last-child),
+  .steps ol li:not(:last-child) {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+  }
+  
+  /* Add color for odd and even preparation steps */
+  .steps ol li:nth-child(odd) {
+    background-color: #f8f8f8;
+  }
+  
+  .steps ol li:nth-child(even) {
+    background-color: #fffbe6;
+  }
+  
+  /* Style all <h2> elements inside .box */
+  .box h2 {
+    color: #c1440e;
+    margin-top: 0;
+  }
+
+  .back-button {
+    display: inline-block;
+    margin: 10px 0 20px 0;
+    padding: 10px 15px;
+    background-color: #c1440e;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .back-button:hover {
+    background-color: #a13509;
+  }
+  
+  
