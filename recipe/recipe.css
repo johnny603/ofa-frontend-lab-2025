@@ -76,4 +76,9 @@ body {
     background-color: #a13509;
   }
   
-  
+  .box.title {
+    font-size: 2rem;
+    color: #c1440e;
+    text-align: center;
+    margin-bottom: 20px;
+  }
