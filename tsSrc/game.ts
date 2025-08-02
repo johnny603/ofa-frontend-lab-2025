@@ -4,20 +4,74 @@
 const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
+// Camera object
+const camera = {
+    x: 0,
+    y: 0,
+    width: canvas.width,
+    height: canvas.height,
+};
+
 // Set the canvas to fill the entire window
 function resizeCanvas(): void {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+    camera.width = canvas.width;
+    camera.height = canvas.height;
 }
 resizeCanvas();
-
-// Automatically resize canvas on window resize
-window.addEventListener("resize", () => {
-    resizeCanvas();
-});
+window.addEventListener("resize", resizeCanvas);
 
 // Grid size constant
 const gridSize = 50;
+const chunkSize = 10; // 10x10 tiles per chunk
+
+// Type for tile coordinates
+interface Tile {
+    x: number;
+    y: number;
+}
+
+// Map to store hard blocks per chunk: key = "chunkX,chunkY", value = Set of tile keys "x,y"
+const chunksHardBlocks: Map<string, Set<string>> = new Map();
+
+// Simple seeded pseudo-random generator for consistency across runs
+function seededRandom(seed: number): () => number {
+    return function() {
+        seed = (seed * 9301 + 49297) % 233280;
+        return seed / 233280;
+    }
+}
+
+// Generate hard blocks for a chunk at (chunkX, chunkY)
+function generateHardBlocksForChunk(chunkX: number, chunkY: number): Set<string> {
+    const blockSet = new Set<string>();
+    // Create seed based on chunk coords for consistent generation
+    const seed = chunkX * 374761393 + chunkY * 668265263; 
+    const random = seededRandom(seed);
+
+    for (let i = 0; i < chunkSize; i++) {
+        for (let j = 0; j < chunkSize; j++) {
+            // Randomly decide if a tile is hard block, e.g. 20% chance
+            if (random() < 0.2) {
+                const tileX = (chunkX * chunkSize + i) * gridSize;
+                const tileY = (chunkY * chunkSize + j) * gridSize;
+                blockSet.add(`${tileX},${tileY}`);
+            }
+        }
+    }
+    return blockSet;
+}
+
+// Get blocks in a chunk, generate if missing
+function getHardBlocksForChunk(chunkX: number, chunkY: number): Set<string> {
+    const key = `${chunkX},${chunkY}`;
+    if (!chunksHardBlocks.has(key)) {
+        const generated = generateHardBlocksForChunk(chunkX, chunkY);
+        chunksHardBlocks.set(key, generated);
+    }
+    return chunksHardBlocks.get(key)!;
+}
 
 // Player object interface
 interface Player {
@@ -33,41 +87,44 @@ interface Player {
 
 // Player object
 const player: Player = {
-    x: Math.floor(canvas.width / 2 / gridSize) * gridSize,
-    y: Math.floor(canvas.height / 2 / gridSize) * gridSize,
+    x: 0,
+    y: 0,
     size: 50,
-    speed: 5, // pixels per frame
+    speed: 5,
     color: "#00ffcc",
     targetX: 0,
     targetY: 0,
     isMoving: false,
 };
+
+// Center player at initial position
+player.x = Math.floor(canvas.width / 2 / gridSize) * gridSize;
+player.y = Math.floor(canvas.height / 2 / gridSize) * gridSize;
 player.targetX = player.x;
 player.targetY = player.y;
 
-// Object to track key presses
+// Input tracking
 const keys: { [key: string]: boolean } = {};
-
-// Event listeners for arrow key movement
 window.addEventListener("keydown", (e: KeyboardEvent) => {
     keys[e.key] = true;
 });
-
 window.addEventListener("keyup", (e: KeyboardEvent) => {
     keys[e.key] = false;
 });
 
-// Helper to check if the next position is inside canvas boundaries
-function isValidPosition(x: number, y: number): boolean {
-    return (
-        x >= 0 &&
-        y >= 0 &&
-        x <= canvas.width - player.size &&
-        y <= canvas.height - player.size
-    );
+// Helper: get chunk coords from tile coords
+function getChunkCoords(x: number, y: number): [number, number] {
+    return [Math.floor(x / (gridSize * chunkSize)), Math.floor(y / (gridSize * chunkSize))];
 }
 
-// Helper to start movement if possible
+// Check if position is blocked by hard block
+function isValidPosition(x: number, y: number): boolean {
+    const [chunkX, chunkY] = getChunkCoords(x, y);
+    const blocks = getHardBlocksForChunk(chunkX, chunkY);
+    return !blocks.has(`${x},${y}`);
+}
+
+// Try to move player to new tile
 function tryStartMovement(newX: number, newY: number): boolean {
     if (!isValidPosition(newX, newY)) return false;
     player.targetX = newX;
@@ -76,9 +133,9 @@ function tryStartMovement(newX: number, newY: number): boolean {
     return true;
 }
 
-// Handles input and decides movement
+// Handle movement input (WASD/arrows)
 function handleMovementInput(): void {
-    if (player.isMoving) return; // Early return if already moving
+    if (player.isMoving) return;
 
     if (keys["ArrowUp"] || keys["w"]) {
         tryStartMovement(player.x, player.y - gridSize);
@@ -97,7 +154,7 @@ function handleMovementInput(): void {
     }
 }
 
-// Update player position smoothly toward target
+// Smooth movement between tiles
 function updatePlayerPosition(): void {
     if (!player.isMoving) return;
 
@@ -118,40 +175,76 @@ function updatePlayerPosition(): void {
     }
 }
 
-// Update function calls input handler and updates player position
-function update(): void {
-    handleMovementInput();
-    updatePlayerPosition();
+// Update camera to follow the player
+function updateCamera(): void {
+    camera.x = player.x + player.size / 2 - canvas.width / 2;
+    camera.y = player.y + player.size / 2 - canvas.height / 2;
 }
 
-// Draw yellow grid on the canvas background
-function drawGrid(gridSize: number = 50): void {
+// Draw the grid lines
+function drawGrid(): void {
     ctx.strokeStyle = 'yellow';
     ctx.lineWidth = 1;
 
-    // Draw vertical lines
-    for (let x = 0; x <= canvas.width; x += gridSize) {
+    const startX = Math.floor(camera.x / gridSize) * gridSize;
+    const endX = camera.x + canvas.width;
+    const startY = Math.floor(camera.y / gridSize) * gridSize;
+    const endY = camera.y + canvas.height;
+
+    for (let x = startX; x <= endX; x += gridSize) {
         ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, canvas.height);
+        ctx.moveTo(x - camera.x, 0);
+        ctx.lineTo(x - camera.x, canvas.height);
         ctx.stroke();
     }
 
-    // Draw horizontal lines
-    for (let y = 0; y <= canvas.height; y += gridSize) {
+    for (let y = startY; y <= endY; y += gridSize) {
         ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(canvas.width, y);
+        ctx.moveTo(0, y - camera.y);
+        ctx.lineTo(canvas.width, y - camera.y);
         ctx.stroke();
     }
 }
 
-// Draw the player and background
+// Draw hard blocks near camera
+function drawHardBlocks(): void {
+    // Calculate visible chunks around camera
+    const startChunkX = Math.floor(camera.x / (gridSize * chunkSize)) - 1;
+    const endChunkX = Math.floor((camera.x + canvas.width) / (gridSize * chunkSize)) + 1;
+    const startChunkY = Math.floor(camera.y / (gridSize * chunkSize)) - 1;
+    const endChunkY = Math.floor((camera.y + canvas.height) / (gridSize * chunkSize)) + 1;
+
+    for (let cx = startChunkX; cx <= endChunkX; cx++) {
+        for (let cy = startChunkY; cy <= endChunkY; cy++) {
+            const blocks = getHardBlocksForChunk(cx, cy);
+            blocks.forEach((key) => {
+                const [x, y] = key.split(",").map(Number);
+                ctx.fillStyle = "#444";
+                ctx.fillRect(x - camera.x, y - camera.y, gridSize, gridSize);
+            });
+        }
+    }
+}
+
+// Draw the full scene
 function draw(): void {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawGrid(gridSize);
+    drawGrid();
+    drawHardBlocks();
     ctx.fillStyle = player.color;
-    ctx.fillRect(player.x, player.y, player.size, player.size);
+    ctx.fillRect(
+        player.x - camera.x,
+        player.y - camera.y,
+        player.size,
+        player.size
+    );
+}
+
+// Main game update logic
+function update(): void {
+    handleMovementInput();
+    updatePlayerPosition();
+    updateCamera();
 }
 
 // Main game loop
