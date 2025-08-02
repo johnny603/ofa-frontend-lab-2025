@@ -41,4 +41,94 @@ function update() {
     if (!player.isMoving) {
         // Only start a move if not already moving
         if (keys["ArrowUp"] || keys["w"]) {
-        
+            const nextY = player.y - gridSize;
+            if (nextY >= 0) {
+                player.targetY = nextY;
+                player.targetX = player.x;
+                player.isMoving = true;
+            }
+        }
+        else if (keys["ArrowDown"] || keys["s"]) {
+            const nextY = player.y + gridSize;
+            if (nextY <= canvas.height - player.size) {
+                player.targetY = nextY;
+                player.targetX = player.x;
+                player.isMoving = true;
+            }
+        }
+        else if (keys["ArrowLeft"] || keys["a"]) {
+            const nextX = player.x - gridSize;
+            if (nextX >= 0) {
+                player.targetX = nextX;
+                player.targetY = player.y;
+                player.isMoving = true;
+            }
+        }
+        else if (keys["ArrowRight"] || keys["d"]) {
+            const nextX = player.x + gridSize;
+            if (nextX <= canvas.width - player.size) {
+                player.targetX = nextX;
+                player.targetY = player.y;
+                player.isMoving = true;
+            }
+        }
+    }
+    // Smoothly move toward target position if moving
+    if (player.isMoving) {
+        // Move X toward targetX
+        if (player.x < player.targetX) {
+            player.x = Math.min(player.x + player.speed, player.targetX);
+        }
+        else if (player.x > player.targetX) {
+            player.x = Math.max(player.x - player.speed, player.targetX);
+        }
+        // Move Y toward targetY
+        if (player.y < player.targetY) {
+            player.y = Math.min(player.y + player.speed, player.targetY);
+        }
+        else if (player.y > player.targetY) {
+            player.y = Math.max(player.y - player.speed, player.targetY);
+        }
+        // Check if reached target
+        if (player.x === player.targetX && player.y === player.targetY) {
+            player.isMoving = false;
+        }
+    }
+}
+// Draw yellow grid on the canvas background
+function drawGrid(gridSize = 50) {
+    ctx.strokeStyle = 'yellow';
+    ctx.lineWidth = 1;
+    // Draw vertical lines
+    for (let x = 0; x <= canvas.width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+    }
+    // Draw horizontal lines
+    for (let y = 0; y <= canvas.height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
+}
+// Draw the player and background
+function draw() {
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // Draw the yellow grid
+    drawGrid(gridSize);
+    // Draw the player
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y, player.size, player.size);
+}
+// Main game loop
+function gameLoop() {
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+}
+// Start the game
+gameLoop();

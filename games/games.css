@@ -93,3 +93,9 @@
     font-size: 0.9rem;
   }
   
+  #gameCanvas {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    background: grey;
+  }
