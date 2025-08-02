@@ -1,15 +1,12 @@
 "use strict";
-// Get the canvas and its 2D rendering context
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-// Camera object
 const camera = {
     x: 0,
     y: 0,
     width: canvas.width,
     height: canvas.height,
 };
-// Set the canvas to fill the entire window
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -18,27 +15,23 @@ function resizeCanvas() {
 }
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
-// Grid size constant
 const gridSize = 50;
-const chunkSize = 10; // 10x10 tiles per chunk
-// Map to store hard blocks per chunk: key = "chunkX,chunkY", value = Set of tile keys "x,y"
+const chunkSize = 10;
+// Create maps to store blocks for each chunk
 const chunksHardBlocks = new Map();
-// Simple seeded pseudo-random generator for consistency across runs
+const chunksSoftBlocks = new Map();
 function seededRandom(seed) {
     return function () {
         seed = (seed * 9301 + 49297) % 233280;
         return seed / 233280;
     };
 }
-// Generate hard blocks for a chunk at (chunkX, chunkY)
 function generateHardBlocksForChunk(chunkX, chunkY) {
     const blockSet = new Set();
-    // Create seed based on chunk coords for consistent generation
     const seed = chunkX * 374761393 + chunkY * 668265263;
     const random = seededRandom(seed);
     for (let i = 0; i < chunkSize; i++) {
         for (let j = 0; j < chunkSize; j++) {
-            // Randomly decide if a tile is hard block, e.g. 20% chance
             if (random() < 0.2) {
                 const tileX = (chunkX * chunkSize + i) * gridSize;
                 const tileY = (chunkY * chunkSize + j) * gridSize;
@@ -48,16 +41,35 @@ function generateHardBlocksForChunk(chunkX, chunkY) {
     }
     return blockSet;
 }
-// Get blocks in a chunk, generate if missing
+function generateSoftBlocksForChunk(chunkX, chunkY) {
+    const blockSet = new Set();
+    const seed = chunkX * 498761393 + chunkY * 127265263;
+    const random = seededRandom(seed);
+    for (let i = 0; i < chunkSize; i++) {
+        for (let j = 0; j < chunkSize; j++) {
+            if (random() < 0.2) {
+                const tileX = (chunkX * chunkSize + i) * gridSize;
+                const tileY = (chunkY * chunkSize + j) * gridSize;
+                blockSet.add(`${tileX},${tileY}`);
+            }
+        }
+    }
+    return blockSet;
+}
 function getHardBlocksForChunk(chunkX, chunkY) {
     const key = `${chunkX},${chunkY}`;
     if (!chunksHardBlocks.has(key)) {
-        const generated = generateHardBlocksForChunk(chunkX, chunkY);
-        chunksHardBlocks.set(key, generated);
+        chunksHardBlocks.set(key, generateHardBlocksForChunk(chunkX, chunkY));
     }
     return chunksHardBlocks.get(key);
 }
-// Player object
+function getSoftBlocksForChunk(chunkX, chunkY) {
+    const key = `${chunkX},${chunkY}`;
+    if (!chunksSoftBlocks.has(key)) {
+        chunksSoftBlocks.set(key, generateSoftBlocksForChunk(chunkX, chunkY));
+    }
+    return chunksSoftBlocks.get(key);
+}
 const player = {
     x: 0,
     y: 0,
@@ -68,30 +80,29 @@ const player = {
     targetY: 0,
     isMoving: false,
 };
-// Center player at initial position
 player.x = Math.floor(canvas.width / 2 / gridSize) * gridSize;
 player.y = Math.floor(canvas.height / 2 / gridSize) * gridSize;
 player.targetX = player.x;
 player.targetY = player.y;
-// Input tracking
 const keys = {};
 window.addEventListener("keydown", (e) => {
     keys[e.key] = true;
+    if (e.key.toLowerCase() === "p") {
+        attemptPunch();
+    }
 });
 window.addEventListener("keyup", (e) => {
     keys[e.key] = false;
 });
-// Helper: get chunk coords from tile coords
 function getChunkCoords(x, y) {
     return [Math.floor(x / (gridSize * chunkSize)), Math.floor(y / (gridSize * chunkSize))];
 }
-// Check if position is blocked by hard block
 function isValidPosition(x, y) {
     const [chunkX, chunkY] = getChunkCoords(x, y);
-    const blocks = getHardBlocksForChunk(chunkX, chunkY);
-    return !blocks.has(`${x},${y}`);
+    const hardBlocks = getHardBlocksForChunk(chunkX, chunkY);
+    const softBlocks = getSoftBlocksForChunk(chunkX, chunkY);
+    return !hardBlocks.has(`${x},${y}`) && !softBlocks.has(`${x},${y}`);
 }
-// Try to move player to new tile
 function tryStartMovement(newX, newY) {
     if (!isValidPosition(newX, newY))
         return false;
@@ -100,7 +111,6 @@ function tryStartMovement(newX, newY) {
     player.isMoving = true;
     return true;
 }
-// Handle movement input (WASD/arrows)
 function handleMovementInput() {
     if (player.isMoving)
         return;
@@ -120,7 +130,26 @@ function handleMovementInput() {
         tryStartMovement(player.x + gridSize, player.y);
     }
 }
-// Smooth movement between tiles
+function attemptPunch() {
+    if (player.isMoving)
+        return;
+    const directions = [
+        [0, -gridSize],
+        [0, gridSize],
+        [-gridSize, 0],
+        [gridSize, 0],
+    ];
+    for (const [dx, dy] of directions) {
+        const targetX = player.x + dx;
+        const targetY = player.y + dy;
+        const [chunkX, chunkY] = getChunkCoords(targetX, targetY);
+        const softBlocks = getSoftBlocksForChunk(chunkX, chunkY);
+        if (softBlocks.has(`${targetX},${targetY}`)) {
+            softBlocks.delete(`${targetX},${targetY}`);
+            break; // Only punch one block
+        }
+    }
+}
 function updatePlayerPosition() {
     if (!player.isMoving)
         return;
@@ -140,12 +169,10 @@ function updatePlayerPosition() {
         player.isMoving = false;
     }
 }
-// Update camera to follow the player
 function updateCamera() {
     camera.x = player.x + player.size / 2 - canvas.width / 2;
     camera.y = player.y + player.size / 2 - canvas.height / 2;
 }
-// Draw the grid lines
 function drawGrid() {
     ctx.strokeStyle = 'yellow';
     ctx.lineWidth = 1;
@@ -166,9 +193,7 @@ function drawGrid() {
         ctx.stroke();
     }
 }
-// Draw hard blocks near camera with rock style
 function drawHardBlocks() {
-    // Calculate visible chunks around camera
     const startChunkX = Math.floor(camera.x / (gridSize * chunkSize)) - 1;
     const endChunkX = Math.floor((camera.x + canvas.width) / (gridSize * chunkSize)) + 1;
     const startChunkY = Math.floor(camera.y / (gridSize * chunkSize)) - 1;
@@ -178,10 +203,8 @@ function drawHardBlocks() {
             const blocks = getHardBlocksForChunk(cx, cy);
             blocks.forEach((key) => {
                 const [x, y] = key.split(",").map(Number);
-                // Base rock color
                 ctx.fillStyle = "#666666";
                 ctx.fillRect(x - camera.x, y - camera.y, gridSize, gridSize);
-                // Add some "rock cracks" — random small lines
                 ctx.strokeStyle = "#4a4a4a";
                 ctx.lineWidth = 2;
                 ctx.beginPath();
@@ -194,36 +217,63 @@ function drawHardBlocks() {
                     ctx.lineTo(endX, endY);
                 }
                 ctx.stroke();
-                // 3D shading: light top-left
                 ctx.fillStyle = "rgba(255,255,255,0.15)";
-                ctx.fillRect(x - camera.x, y - camera.y, gridSize, 5); // top edge
-                ctx.fillRect(x - camera.x, y - camera.y, 5, gridSize); // left edge
-                // Shadow bottom-right
+                ctx.fillRect(x - camera.x, y - camera.y, gridSize, 5);
+                ctx.fillRect(x - camera.x, y - camera.y, 5, gridSize);
                 ctx.fillStyle = "rgba(0,0,0,0.25)";
-                ctx.fillRect(x - camera.x, y - camera.y + gridSize - 5, gridSize, 5); // bottom edge
-                ctx.fillRect(x - camera.x + gridSize - 5, y - camera.y, 5, gridSize); // right edge
+                ctx.fillRect(x - camera.x, y - camera.y + gridSize - 5, gridSize, 5);
+                ctx.fillRect(x - camera.x + gridSize - 5, y - camera.y, 5, gridSize);
             });
         }
     }
 }
-// Draw the full scene with golden cheese player
+function drawSoftBlocks() {
+    const startChunkX = Math.floor(camera.x / (gridSize * chunkSize)) - 1;
+    const endChunkX = Math.floor((camera.x + canvas.width) / (gridSize * chunkSize)) + 1;
+    const startChunkY = Math.floor(camera.y / (gridSize * chunkSize)) - 1;
+    const endChunkY = Math.floor((camera.y + canvas.height) / (gridSize * chunkSize)) + 1;
+    for (let cx = startChunkX; cx <= endChunkX; cx++) {
+        for (let cy = startChunkY; cy <= endChunkY; cy++) {
+            const blocks = getSoftBlocksForChunk(cx, cy);
+            blocks.forEach((key) => {
+                const [x, y] = key.split(",").map(Number);
+                const sx = x - camera.x;
+                const sy = y - camera.y;
+                ctx.fillStyle = "#d98c00";
+                ctx.fillRect(sx, sy, gridSize, gridSize);
+                ctx.strokeStyle = "#590000";
+                ctx.lineWidth = 2;
+                ctx.strokeRect(sx, sy, gridSize, gridSize);
+                for (let i = 0; i < 5; i++) {
+                    const dotX = sx + Math.random() * gridSize;
+                    const dotY = sy + Math.random() * gridSize;
+                    const size = Math.random() * 1.5 + 0.5;
+                    ctx.fillStyle = Math.random() > 0.5 ? "#b87333" : "#a0522d";
+                    ctx.beginPath();
+                    ctx.arc(dotX, dotY, size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
+                ctx.fillRect(sx, sy, gridSize, gridSize / 4);
+            });
+        }
+    }
+}
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid();
     drawHardBlocks();
-    // Draw golden cheese player with gradient
+    drawSoftBlocks();
     const px = player.x - camera.x;
     const py = player.y - camera.y;
     const grad = ctx.createRadialGradient(px + player.size / 2, py + player.size / 2, player.size / 4, px + player.size / 2, py + player.size / 2, player.size / 1.5);
-    grad.addColorStop(0, "#ffeb3b"); // bright yellow center
-    grad.addColorStop(1, "#b38600"); // darker golden edges
+    grad.addColorStop(0, "#ffeb3b");
+    grad.addColorStop(1, "#b38600");
     ctx.fillStyle = grad;
     ctx.fillRect(px, py, player.size, player.size);
-    // Add outline
     ctx.lineWidth = 3;
     ctx.strokeStyle = "#333300";
     ctx.strokeRect(px, py, player.size, player.size);
-    // Draw some "holes" in the cheese — circles with shadow
     ctx.fillStyle = "#c1a700";
     const holePositions = [
         [px + 10, py + 15],
@@ -239,17 +289,14 @@ function draw() {
         ctx.shadowBlur = 0;
     });
 }
-// Main game update logic
 function update() {
     handleMovementInput();
     updatePlayerPosition();
     updateCamera();
 }
-// Main game loop
 function gameLoop() {
     update();
     draw();
     requestAnimationFrame(gameLoop);
 }
-// Start the game
 gameLoop();
