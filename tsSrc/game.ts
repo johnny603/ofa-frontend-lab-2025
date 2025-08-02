@@ -91,7 +91,7 @@ const player: Player = {
     y: 0,
     size: 50,
     speed: 5,
-    color: "#00ffcc",
+    color: "#f5b042",
     targetX: 0,
     targetY: 0,
     isMoving: false,
@@ -206,7 +206,7 @@ function drawGrid(): void {
     }
 }
 
-// Draw hard blocks near camera
+// Draw hard blocks near camera with rock style
 function drawHardBlocks(): void {
     // Calculate visible chunks around camera
     const startChunkX = Math.floor(camera.x / (gridSize * chunkSize)) - 1;
@@ -219,25 +219,85 @@ function drawHardBlocks(): void {
             const blocks = getHardBlocksForChunk(cx, cy);
             blocks.forEach((key) => {
                 const [x, y] = key.split(",").map(Number);
-                ctx.fillStyle = "#444";
+
+                // Base rock color
+                ctx.fillStyle = "#666666";
                 ctx.fillRect(x - camera.x, y - camera.y, gridSize, gridSize);
+
+                // Add some "rock cracks" — random small lines
+                ctx.strokeStyle = "#4a4a4a";
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (let i = 0; i < 3; i++) {
+                    const startX = x - camera.x + Math.random() * gridSize;
+                    const startY = y - camera.y + Math.random() * gridSize;
+                    const endX = startX + (Math.random() * 10 - 5);
+                    const endY = startY + (Math.random() * 10 - 5);
+                    ctx.moveTo(startX, startY);
+                    ctx.lineTo(endX, endY);
+                }
+                ctx.stroke();
+
+                // 3D shading: light top-left
+                ctx.fillStyle = "rgba(255,255,255,0.15)";
+                ctx.fillRect(x - camera.x, y - camera.y, gridSize, 5); // top edge
+                ctx.fillRect(x - camera.x, y - camera.y, 5, gridSize); // left edge
+
+                // Shadow bottom-right
+                ctx.fillStyle = "rgba(0,0,0,0.25)";
+                ctx.fillRect(x - camera.x, y - camera.y + gridSize - 5, gridSize, 5); // bottom edge
+                ctx.fillRect(x - camera.x + gridSize - 5, y - camera.y, 5, gridSize); // right edge
             });
         }
     }
 }
 
-// Draw the full scene
+// Draw the full scene with golden cheese player
 function draw(): void {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid();
     drawHardBlocks();
-    ctx.fillStyle = player.color;
-    ctx.fillRect(
-        player.x - camera.x,
-        player.y - camera.y,
-        player.size,
-        player.size
+
+    // Draw golden cheese player with gradient
+    const px = player.x - camera.x;
+    const py = player.y - camera.y;
+
+    const grad = ctx.createRadialGradient(
+        px + player.size / 2,
+        py + player.size / 2,
+        player.size / 4,
+        px + player.size / 2,
+        py + player.size / 2,
+        player.size / 1.5
     );
+    grad.addColorStop(0, "#ffeb3b"); // bright yellow center
+    grad.addColorStop(1, "#b38600"); // darker golden edges
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(px, py, player.size, player.size);
+
+
+    // Add outline
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = "#333300";
+    ctx.strokeRect(px, py, player.size, player.size);
+
+    // Draw some "holes" in the cheese — circles with shadow
+    ctx.fillStyle = "#c1a700";
+    const holePositions = [
+        [px + 10, py + 15],
+        [px + 25, py + 35],
+        [px + 40, py + 10],
+    ];
+
+    holePositions.forEach(([hx, hy]) => {
+        ctx.beginPath();
+        ctx.shadowColor = "rgba(0,0,0,0.4)";
+        ctx.shadowBlur = 4;
+        ctx.arc(hx, hy, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+    });
 }
 
 // Main game update logic
