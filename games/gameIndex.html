@@ -1,51 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Games</title>
-  <link rel="stylesheet" href="games.css">
-  <link rel="icon" href="https://www.svgrepo.com/show/326649/game-controller-outline.svg" type="image/x-icon">
+  <link rel="stylesheet" href="games.css" />
+  <link
+    rel="icon"
+    href="https://www.svgrepo.com/show/326649/game-controller-outline.svg"
+    type="image/x-icon"
+  />
 </head>
 <body>
-  <div id="notification" class="notification hidden"></div>
+  <div id="notification" class="notification hidden" role="alert" aria-live="assertive"></div>
+
   <div class="container">
-    <!-- Main heading -->
     <h1>Games</h1>
 
-    <!-- Navigation bar with external links -->
     <h3>Projects</h3>
     <nav>
-      <a href="../index.html">Back</a>
-      
+      <a href="../index.html" title="Back to main index">Back</a>
     </nav>
-    <div id="touch-controls">
-      <button id="up">↑</button>
+
+    <div id="touch-controls" aria-label="Touch controls for movement">
+      <button id="up" aria-label="Move up">↑</button>
       <div class="middle-row">
-        <button id="left">←</button>
-        <button id="down">↓</button>
-        <button id="right">→</button>
+        <button id="left" aria-label="Move left">←</button>
+        <button id="down" aria-label="Move down">↓</button>
+        <button id="right" aria-label="Move right">→</button>
       </div>
     </div>
   </div>
-    </div>
-    <canvas id="gameCanvas"></canvas>
-    <button id="resetBtn" style="
-    display: none;
-    position: absolute;
-    top: 60%;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 20px;
-    font-size: 20px;
-    background-color: #ff4444;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  ">
+
+  <canvas id="gameCanvas" aria-label="Game canvas" role="img"></canvas>
+
+  <button
+    id="resetBtn"
+    style="
+      display: none;
+      position: absolute;
+      top: 60%;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      font-size: 20px;
+      background-color: #ff4444;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    "
+    aria-hidden="true"
+  >
     Go back to floor 0?
   </button>
-    <script src="../js/game.js"></script>
+
+  <script src="../js/game.js"></script>
+
+  <footer>© 2025 - Johnny S</footer>
 </body>
-<footer>© 2025 - Johnny S</footer>
 </html>
