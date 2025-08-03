@@ -1,5 +1,5 @@
 "use strict";
-let _a, _b, _c, _d, _e;
+let _a, _b, _c, _d, _e, _f;
 const canvasElement = document.getElementById('gameCanvas');
 if (!(canvasElement instanceof HTMLCanvasElement)) {
     throw new Error("Canvas element not found or is not a canvas");
@@ -35,7 +35,7 @@ function generateHardBlocksForChunk(chunkX, chunkY) {
     const random = seededRandom(seed);
     for (let i = 0; i < chunkSize; i++) {
         for (let j = 0; j < chunkSize; j++) {
-            if (random() < 0.2) {
+            if (random() < 0.5) {
                 const tileX = (chunkX * chunkSize + i) * gridSize;
                 const tileY = (chunkY * chunkSize + j) * gridSize;
                 blockSet.add(`${tileX},${tileY}`);
@@ -50,7 +50,7 @@ function generateSoftBlocksForChunk(chunkX, chunkY) {
     const random = seededRandom(seed);
     for (let i = 0; i < chunkSize; i++) {
         for (let j = 0; j < chunkSize; j++) {
-            if (random() < 0.2) {
+            if (random() < 0.3) {
                 const tileX = (chunkX * chunkSize + i) * gridSize;
                 const tileY = (chunkY * chunkSize + j) * gridSize;
                 blockSet.add(`${tileX},${tileY}`);
@@ -65,7 +65,7 @@ function generateLavaBlocksForChunk(chunkX, chunkY) {
     const random = seededRandom(seed);
     for (let i = 0; i < chunkSize; i++) {
         for (let j = 0; j < chunkSize; j++) {
-            if (random() < 0.1) {
+            if (random() < 0.2) {
                 const tileX = (chunkX * chunkSize + i) * gridSize;
                 const tileY = (chunkY * chunkSize + j) * gridSize;
                 blockSet.add(`${tileX},${tileY}`);
@@ -177,6 +177,7 @@ function simulateKeyPress(key) {
 (_b = document.getElementById("down")) === null || _b === void 0 ? void 0 : _b.addEventListener("touchstart", () => simulateKeyPress("s"));
 (_c = document.getElementById("left")) === null || _c === void 0 ? void 0 : _c.addEventListener("touchstart", () => simulateKeyPress("a"));
 (_d = document.getElementById("right")) === null || _d === void 0 ? void 0 : _d.addEventListener("touchstart", () => simulateKeyPress("d"));
+(_e = document.getElementById("P")) === null || _e === void 0 ? void 0 : _e.addEventListener("touchstart", () => simulateKeyPress("p"));
 function attemptPunch() {
     if (player.isMoving)
         return;
@@ -215,7 +216,7 @@ function loadModifiedChunks() {
         modifiedChunks.softBlockDeletes.set(key, new Set(data[key]));
     }
 }
-(_e = document.getElementById("resetBtn")) === null || _e === void 0 ? void 0 : _e.addEventListener("click", resetGame);
+(_f = document.getElementById("resetBtn")) === null || _f === void 0 ? void 0 : _f.addEventListener("click", resetGame);
 function updatePlayerPosition() {
     if (!player.isMoving)
         return;

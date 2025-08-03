@@ -41,7 +41,7 @@ function generateHardBlocksForChunk(chunkX: number, chunkY: number): Set<string>
 
     for (let i = 0; i < chunkSize; i++) {
         for (let j = 0; j < chunkSize; j++) {
-            if (random() < 0.2) {
+            if (random() < 0.5) {
                 const tileX = (chunkX * chunkSize + i) * gridSize;
                 const tileY = (chunkY * chunkSize + j) * gridSize;
                 blockSet.add(`${tileX},${tileY}`);
@@ -58,7 +58,7 @@ function generateSoftBlocksForChunk(chunkX: number, chunkY: number): Set<string>
 
     for (let i = 0; i < chunkSize; i++) {
         for (let j = 0; j < chunkSize; j++) {
-            if (random() < 0.2) {
+            if (random() < 0.3) {
                 const tileX = (chunkX * chunkSize + i) * gridSize;
                 const tileY = (chunkY * chunkSize + j) * gridSize;
                 blockSet.add(`${tileX},${tileY}`);
@@ -75,7 +75,7 @@ function generateLavaBlocksForChunk(chunkX: number, chunkY: number): Set<string>
 
     for (let i = 0; i < chunkSize; i++) {
         for (let j = 0; j < chunkSize; j++) {
-            if (random() < 0.1) {
+            if (random() < 0.2) {
                 const tileX = (chunkX * chunkSize + i) * gridSize;
                 const tileY = (chunkY * chunkSize + j) * gridSize;
                 blockSet.add(`${tileX},${tileY}`);
@@ -217,6 +217,8 @@ document.getElementById("up")?.addEventListener("touchstart", () => simulateKeyP
 document.getElementById("down")?.addEventListener("touchstart", () => simulateKeyPress("s"));
 document.getElementById("left")?.addEventListener("touchstart", () => simulateKeyPress("a"));
 document.getElementById("right")?.addEventListener("touchstart", () => simulateKeyPress("d"));
+document.getElementById("P")?.addEventListener("touchstart", () => simulateKeyPress("p"));
+
 
 function attemptPunch(): void {
     if (player.isMoving) return;
