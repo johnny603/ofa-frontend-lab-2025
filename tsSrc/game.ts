@@ -6,8 +6,10 @@ if (!(canvasElement instanceof HTMLCanvasElement)) {
 }
 const canvas = canvasElement;
 const ctx = canvas.getContext('2d')!;
-
 const camera = { x: 0, y: 0, width: canvas.width, height: canvas.height };
+let flicker = 1;
+let frameCount = 0;
+let gameOver = false;
 
 function resizeCanvas(): void {
     canvas.width = window.innerWidth;
@@ -139,6 +141,26 @@ interface Player {
     lastLavaDamageTime: number;
 }
 
+
+
+function resetGame(): void {
+    player.x = Math.floor(canvas.width / 2 / gridSize) * gridSize;
+    player.y = Math.floor(canvas.height / 2 / gridSize) * gridSize;
+    player.targetX = player.x;
+    player.targetY = player.y;
+    player.hp = 100;
+    player.isMoving = false;
+    gameOver = false;
+    player.lastLavaDamageTime = 0;
+    updateCamera();
+
+    // Hide button
+    const resetBtn = document.getElementById("resetBtn")!;
+    resetBtn.style.display = "none";
+}
+
+
+
 const player: Player = {
     x: 0, y: 0, size: 50, speed: 5,
     color: "#f5b042", targetX: 0, targetY: 0, isMoving: false, hp: 100,
@@ -238,6 +260,8 @@ function loadModifiedChunks(): void {
         modifiedChunks.softBlockDeletes.set(key, new Set(data[key]));
     }
 }
+
+document.getElementById("resetBtn")?.addEventListener("click", resetGame);
 
 
 function updatePlayerPosition(): void {
@@ -364,6 +388,11 @@ function drawSoftBlocks(): void {
 }
 
 function drawLavaBlocks(): void {
+    frameCount++;
+    if (frameCount % 20 === 0) {
+        flicker = 0.4 + Math.random() * 0.6;
+    }
+    
     const startChunkX = Math.floor(camera.x / (gridSize * chunkSize)) - 1;
     const endChunkX = Math.floor((camera.x + canvas.width) / (gridSize * chunkSize)) + 1;
     const startChunkY = Math.floor(camera.y / (gridSize * chunkSize)) - 1;
@@ -377,7 +406,6 @@ function drawLavaBlocks(): void {
                 const sx = x - camera.x;
                 const sy = y - camera.y;
 
-                const flicker = 0.4 + 0.6;
 
                 const grad = ctx.createRadialGradient(
                     sx + gridSize / 2,
@@ -442,11 +470,11 @@ const modifiedChunks: {
 function checkLavaDamage(): void {
     const now = performance.now();
     const positionsToCheck = [
-        [player.x, player.y],                                 // current
-        [player.x + gridSize, player.y],                      // right
-        [player.x - gridSize, player.y],                      // left
-        [player.x, player.y + gridSize],                      // down
-        [player.x, player.y - gridSize]                       // up
+        [player.x, player.y],
+        [player.x + gridSize, player.y],
+        [player.x - gridSize, player.y],
+        [player.x, player.y + gridSize],
+        [player.x, player.y - gridSize]
     ];
 
     let isNearLava = false;
@@ -454,20 +482,21 @@ function checkLavaDamage(): void {
     for (const [x, y] of positionsToCheck) {
         const [chunkX, chunkY] = getChunkCoords(x, y);
         const lavaBlocks = getLavaBlocksForChunk(chunkX, chunkY);
-        const tileKey = `${x},${y}`;
-        if (lavaBlocks.has(tileKey)) {
+        if (lavaBlocks.has(`${x},${y}`)) {
             isNearLava = true;
             break;
         }
     }
 
-    if (isNearLava) {
-        if (now - player.lastLavaDamageTime >= 1000) {
-            player.hp = Math.max(0, player.hp - 10);
+    if (isNearLava && !gameOver) {
+        if (now - player.lastLavaDamageTime >= 350) {
+            player.hp = Math.max(0, player.hp - 5);
             player.lastLavaDamageTime = now;
+            if (player.hp <= 0) {
+                gameOver = true;
+                player.isMoving = false;
+            }
         }
-    } else {
-        player.lastLavaDamageTime = now;
     }
 }
 
@@ -543,9 +572,19 @@ function draw(): void {
         ctx.shadowBlur = 0;
     });
     drawHPBar();
+    if (gameOver) {
+        ctx.fillStyle = "#f00";
+        ctx.font = "48px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2);
+        // Show reset button
+        const resetBtn = document.getElementById("resetBtn")!;
+        resetBtn.style.display = "block";
+    }
 }
 
 function update(): void {
+    if (gameOver) return;
     handleMovementInput();
     updatePlayerPosition();
     updateCamera();

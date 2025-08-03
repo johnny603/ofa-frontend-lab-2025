@@ -100,36 +100,3 @@
     background: grey;
     border: 6px solid black;
   }
-
-  #touch-controls {
-    position: fixed;
-    bottom: 2rem;
-    left: 2rem;
-    display: none;
-    flex-direction: column;
-    gap: 0.5rem;
-    z-index: 1000;
-  }
-  
-  #touch-controls button {
-    font-size: 2rem;
-    padding: 1rem;
-    border-radius: 0.5rem;
-    border: none;
-    background-color: #444;
-    color: white;
-  }
-  
-  #touch-controls .middle-row {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-  }
-
-  @media (pointer: coarse) {
-    #touch-controls {
-      display: flex;
-    }
-  }
-  
-  
