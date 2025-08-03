@@ -1,7 +1,12 @@
 "use strict";
 
-const canvas = document.getElementById('gameCanvas') as HTMLCanvasElement;
-const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+const canvasElement = document.getElementById('gameCanvas');
+if (!(canvasElement instanceof HTMLCanvasElement)) {
+    throw new Error("Canvas element not found or is not a canvas");
+}
+const canvas = canvasElement;
+
+const ctx = canvas.getContext('2d')!;
 
 const camera = {
     x: 0,
@@ -167,6 +172,17 @@ function handleMovementInput(): void {
     }
 }
 
+// Touch controls
+function simulateKeyPress(key: string): void {
+    keys[key] = true;
+    setTimeout(() => (keys[key] = false), 100); // Short press
+}
+
+document.getElementById("up")?.addEventListener("touchstart", () => simulateKeyPress("w"));
+document.getElementById("down")?.addEventListener("touchstart", () => simulateKeyPress("s"));
+document.getElementById("left")?.addEventListener("touchstart", () => simulateKeyPress("a"));
+document.getElementById("right")?.addEventListener("touchstart", () => simulateKeyPress("d"));
+
 function attemptPunch(): void {
     if (player.isMoving) return;
 
@@ -314,6 +330,21 @@ function drawSoftBlocks(): void {
                 ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
                 ctx.fillRect(sx, sy, gridSize, gridSize / 4);
             });
+        }
+    }
+}
+
+function unloadDistantChunks(centerX: number, centerY: number, radius: number): void {
+    for (const key of chunksHardBlocks.keys()) {
+        const [x, y] = key.split(",").map(Number);
+        if (Math.abs(x - centerX) > radius || Math.abs(y - centerY) > radius) {
+            chunksHardBlocks.delete(key);
+        }
+    }
+    for (const key of chunksSoftBlocks.keys()) {
+        const [x, y] = key.split(",").map(Number);
+        if (Math.abs(x - centerX) > radius || Math.abs(y - centerY) > radius) {
+            chunksSoftBlocks.delete(key);
         }
     }
 }

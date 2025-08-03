@@ -1,5 +1,10 @@
 "use strict";
-const canvas = document.getElementById('gameCanvas');
+var _a, _b, _c, _d;
+const canvasElement = document.getElementById('gameCanvas');
+if (!(canvasElement instanceof HTMLCanvasElement)) {
+    throw new Error("Canvas element not found or is not a canvas");
+}
+const canvas = canvasElement;
 const ctx = canvas.getContext('2d');
 const camera = {
     x: 0,
@@ -130,6 +135,15 @@ function handleMovementInput() {
         tryStartMovement(player.x + gridSize, player.y);
     }
 }
+// Touch controls
+function simulateKeyPress(key) {
+    keys[key] = true;
+    setTimeout(() => (keys[key] = false), 100); // Short press
+}
+(_a = document.getElementById("up")) === null || _a === void 0 ? void 0 : _a.addEventListener("touchstart", () => simulateKeyPress("w"));
+(_b = document.getElementById("down")) === null || _b === void 0 ? void 0 : _b.addEventListener("touchstart", () => simulateKeyPress("s"));
+(_c = document.getElementById("left")) === null || _c === void 0 ? void 0 : _c.addEventListener("touchstart", () => simulateKeyPress("a"));
+(_d = document.getElementById("right")) === null || _d === void 0 ? void 0 : _d.addEventListener("touchstart", () => simulateKeyPress("d"));
 function attemptPunch() {
     if (player.isMoving)
         return;
@@ -256,6 +270,20 @@ function drawSoftBlocks() {
                 ctx.fillStyle = "rgba(255, 255, 255, 0.05)";
                 ctx.fillRect(sx, sy, gridSize, gridSize / 4);
             });
+        }
+    }
+}
+function unloadDistantChunks(centerX, centerY, radius) {
+    for (const key of chunksHardBlocks.keys()) {
+        const [x, y] = key.split(",").map(Number);
+        if (Math.abs(x - centerX) > radius || Math.abs(y - centerY) > radius) {
+            chunksHardBlocks.delete(key);
+        }
+    }
+    for (const key of chunksSoftBlocks.keys()) {
+        const [x, y] = key.split(",").map(Number);
+        if (Math.abs(x - centerX) > radius || Math.abs(y - centerY) > radius) {
+            chunksSoftBlocks.delete(key);
         }
     }
 }
