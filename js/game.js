@@ -482,4 +482,12 @@ function update() {
     updatePlayerPosition();
     updateCamera();
     checkLavaDamage();
-    unloadDistantChunks(player.x,
+    unloadDistantChunks(player.x, player.y, 1000);
+}
+function gameLoop() {
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+}
+loadModifiedChunks();
+gameLoop();
