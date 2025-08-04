@@ -97,7 +97,8 @@
     display: flex;
     width: 100vw;
     height: 100vh;
-    background: grey;
+    background: #ad4937;
+    background: linear-gradient(130deg,rgba(173, 73, 55, 1) 0%, rgba(130, 109, 55, 1) 73%, rgba(148, 97, 35, 1) 100%);
     border: 6px solid black;
   }
 
