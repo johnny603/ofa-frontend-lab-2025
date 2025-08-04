@@ -1,3 +1,6 @@
+// Get the content container once DOM is loaded (to avoid null if script runs early)
+let contentDiv: HTMLElement | null = null;
+
 function showNotification(message: string, duration = 3000): void {
   const notification = document.getElementById('notification');
   if (!notification) return;
@@ -5,7 +8,6 @@ function showNotification(message: string, duration = 3000): void {
   notification.textContent = message;
   notification.classList.remove('hidden');
 
-  // Hide after duration (default 3 seconds)
   setTimeout(() => {
     notification.classList.add('hidden');
   }, duration);
@@ -21,12 +23,30 @@ function setupH3ClickEvents(): void {
   });
 }
 
+async function loadPage(page: string): Promise<void> {
+  try {
+    const res = await fetch(`pages/${page}.html`);
+    const html = await res.text();
+    if (contentDiv) {
+      contentDiv.innerHTML = html;
+      setupH3ClickEvents(); // Reattach events after content change
+    }
+  }
+}
+
+function handleHashChange(): void {
+  const page = location.hash.replace('#', '') || 'home';
+  loadPage(page);
+}
+
 function sayHello(): void {
   console.log("Hello, world from TypeScript!");
 }
 
-// Wait for the DOM to load before running functions
+// Initialize after DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+  contentDiv = document.getElementById('content');  // Assign here to avoid null
   sayHello();
-  setupH3ClickEvents();
+  handleHashChange();
+  window.addEventListener('hashchange', handleHashChange);
 });

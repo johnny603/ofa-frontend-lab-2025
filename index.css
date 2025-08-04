@@ -1,6 +1,18 @@
 .container {
     text-align: center;
-    background-color: blanchedalmond;
+    background-color: #535353;
+}
+
+h1 {
+    color: #ffffff;
+    font-family: sans-serif;
+    margin-top: 20px;
+}
+
+h3 {
+    color: #ffffff;
+    font-family: sans-serif;
+    margin-top: 10px;
 }
 
 .container a {
@@ -9,7 +21,7 @@
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 2);
     padding: 10px 20px;
     margin: 0 10px;
-    background-color: aliceblue;  
+    background-color: aliceblue;
     display: inline-block;
     transition: transform 0.1s ease, box-shadow 0.1s ease;
     cursor: pointer;
@@ -22,20 +34,20 @@
 }
 
 
-
 footer {
     position: relative;
     bottom: 0;
     right: 0;
     padding: 20px;
-    color: grey;
+    color: #535353;
     text-align: center;
   }
 
   .about-me {
     margin-top: 40px;
+    margin-bottom: 40px;
     padding: 20px;
-    background-color: #fff8dc;
+    background-color: #535353;
     border-top: 2px solid #ccc;
     text-align: center;
     font-family: sans-serif;
@@ -44,7 +56,7 @@ footer {
 .about-me p {
     max-width: 600px;
     margin: auto;
-    color: #333;
+    color: #ffffff;
 }
 
 .social-icons {
@@ -92,5 +104,20 @@ a {
     opacity: 0;
     pointer-events: none;
   }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #33302f;
+}
+
+iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    margin: 0 auto;
+}
   
   
