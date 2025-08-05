@@ -32,7 +32,9 @@ async function loadPage(page: string): Promise<void> {
       setupH3ClickEvents(); // Reattach events after content change
     }
   }
-}
+  catch (error) {
+    console.error('Failed to load page:', error);
+  }
 
 function handleHashChange(): void {
   const page = location.hash.replace('#', '') || 'home';
@@ -49,4 +51,4 @@ document.addEventListener('DOMContentLoaded', () => {
   sayHello();
   handleHashChange();
   window.addEventListener('hashchange', handleHashChange);
-});
+});}
