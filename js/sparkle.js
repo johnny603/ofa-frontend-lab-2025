@@ -34,4 +34,21 @@ function drawStarDust() {
     starDust.forEach((char) => {
         for (let sx = 0; sx < sparkleCanvas.width; sx += 25) {
             for (let sy = 0; sy < sparkleCanvas.height; sy += 25) {
-    
+                const jitterX = sx + (Math.random() * 20 - 10);
+                const jitterY = sy + (Math.random() * 20 - 10);
+                sparkleCtx.fillStyle = `rgba(255, 255, 255, 0.3)`;
+                sparkleCtx.fillText(char, jitterX, jitterY);
+            }
+        }
+    });
+}
+function animate(time = 0) {
+    drawGradientBackground();
+    drawStarDust();
+    particlePositions.forEach((particle) => {
+        const twinkle = 3 * Math.sin((time / 500) + particle.twinkleOffset);
+        drawStar(particle.x, particle.y, particle.star, particle.size + twinkle);
+    });
+    requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
