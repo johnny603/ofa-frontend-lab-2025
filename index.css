@@ -111,6 +111,8 @@ a {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #33302f;
+    background:;
+    background: linear-gradient(to bottom, #33302f, #B0511A); /* Gradient background */
 }
 
 iframe {
