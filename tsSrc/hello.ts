@@ -49,6 +49,4 @@ function sayHello(): void {
 document.addEventListener('DOMContentLoaded', () => {
   contentDiv = document.getElementById('content');  // Assign here to avoid null
   sayHello();
-  handleHashChange();
-  window.addEventListener('hashchange', handleHashChange);
-});}
+  handleHashCha
