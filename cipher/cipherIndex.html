@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Caesar Cipher Game</title>
+  <link rel="stylesheet" href="cipher.css">
+</head>
+<body>
+<div id="popup" class="popup hidden">
+        <span id="popup-message"></span>
+        <button onclick="closePopup()">Close</button>
+</div>
+      
+  <nav class="home-nav">
+    <a href="../index.html"> &lt;&lt; Back</a>
+  </nav>
+
+  <div class="container">
+    <h1>Caesar Cipher Encrypt/Decrypt</h1>
+
+    <div class="buttons">
+      <button onclick="clearAll()">Clear</button>
+      <button onclick="copyToClipboard()">Copy</button>
+    </div>
+
+    <textarea id="text" placeholder="Enter text..."></textarea>
+    <input type="number" id="shift" placeholder="Shift (0–25)" min="0" max="25">
+    
+    <div class="buttons">
+      <button onclick="encryptText()">Encrypt</button>
+      <button onclick="decryptText()">Decrypt</button>
+    </div>
+
+    <div id="output"></div>
+  </div>
+
+  <section class="info-section">
+    <h2>🔐 How It Works</h2>
+    <p>
+      The Caesar Cipher is one of the oldest known encryption techniques. It shifts each letter in your message by a certain number of positions in the alphabet.
+    </p>
+    <ul>
+      <li>For example, with a shift of 3: A → D, B → E, C → F, etc.</li>
+      <li>Non-alphabet characters (spaces, numbers, punctuation) stay the same.</li>
+      <li>You can use the same shift value to decrypt a message.</li>
+    </ul>
+    <p>Try it out above!</p>
+  </section>
+
+  <script src="../js/cipher.js"></script>
+</body>
+</html>
