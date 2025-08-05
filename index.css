@@ -60,7 +60,12 @@ footer {
 }
 
 .social-icons {
-    margin-top: 10px;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 16px; /* space between icons */
+  align-items: center;
+  flex-wrap: wrap; /* allow wrapping on smaller screens */
 }
 
 .social-icons a img {
@@ -207,6 +212,14 @@ table {
   .timeline-item::before {
     left: -10px;
   }
+}
+
+img {
+  max-width: 200px; /* or any preferred width */
+  height: auto;
+  display: block;
+  margin: 10px auto; /* centers image horizontally */
+  border-radius: 8px; /* optional rounded corners */
 }
 
 @keyframes fadeInUp {
