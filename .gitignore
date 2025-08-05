@@ -1,1 +1,17 @@
+# dependencies
+node_modules/
+
+# builds
+dist/
+build/
+*.log
+*.tsbuildinfo
+*.map
+
+# system files
 .DS_Store
+*.swp
+
+# environment variables
+.env
+.env.local

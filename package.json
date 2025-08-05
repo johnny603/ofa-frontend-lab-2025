@@ -21,6 +21,10 @@
   },
   "homepage": "https://github.com/johnny603/ofa-frontend-lab-2025#readme",
   "devDependencies": {
+    "@types/p5": "^1.7.6",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "p5": "^2.0.3"
   }
 }

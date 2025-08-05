@@ -1,5 +1,5 @@
 "use strict";
-let _a, _b, _c, _d, _e, _f;
+var _a, _b, _c, _d, _e, _f;
 const canvasElement = document.getElementById('gameCanvas');
 if (!(canvasElement instanceof HTMLCanvasElement)) {
     throw new Error("Canvas element not found or is not a canvas");
