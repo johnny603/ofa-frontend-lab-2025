@@ -193,6 +193,13 @@ box-shadow: 2px 4px 8px rgba(0,0,0,0.4);
 text-align: left;
 }
 
+.timeline-content img {
+  display: block;         /* Makes the image take up full width of its container, allowing margin auto to work */
+  width: 50%;
+  height: auto;
+  margin: 10px auto;      /* Auto left/right margin centers it */
+}
+
 @media (max-width: 768px) {
 .timeline {
   padding-left: 20px;
