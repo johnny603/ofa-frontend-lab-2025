@@ -116,16 +116,17 @@ a {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #33302f;
-    background:;
     background: linear-gradient(to bottom, #33302f, #B0511A); /* Gradient background */
 }
 
 iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-    margin: 0 auto;
+  width: 100%;
+  max-width: 500px;
+  height: 500px;
+  border: none;
+  display: block;
+  margin: 0 auto;
+  border-radius: 12px;
 }
   
 table {
@@ -229,9 +230,4 @@ img {
   }
   to {
     opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-  
-  
+    transform: translateY
