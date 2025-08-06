@@ -223,13 +223,6 @@ text-align: left;
   text-decoration: underline;
 }
 
-@keyframes fadeInUp {
-from {
-  opacity: 0;
-  transform: translateY(50px);
-}
-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-}
+.art-border {
+  border: 4px solid #333;       /* Dark border */
+  border-radius: 8px;           /* Optional rounded corners */
