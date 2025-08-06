@@ -207,6 +207,15 @@ text-align: left;
 }
 }
 
+.timeline-item a {
+  color: #FFFDD0;
+  text-decoration: none;
+}
+
+.timeline-item a:hover {
+  text-decoration: underline;
+}
+
 @keyframes fadeInUp {
 from {
   opacity: 0;
