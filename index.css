@@ -1,6 +1,11 @@
 .container {
-  text-align: center;
+  width: 100%;
+  max-width: 1200px; /* optional cap */
+  margin: 0 auto;
+  padding: 20px;
   background-color: #535353;
+  overflow-x: auto; /* allows scroll if needed */
+  box-sizing: border-box; /* ensures padding doesn't break layout */
 }
 
 h1 {
@@ -122,12 +127,13 @@ iframe {
 }
 
 table {
-  width: 100%;
+  width: 100%;             /* Stretch to fill container */
   border-collapse: collapse;
   text-align: center;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6); /* Adds 3D table shadow */
-  border-radius: 8px; /* Optional: Rounds table corners */
-  overflow: hidden; /* Ensures border-radius clips children */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+  border-radius: 8px;
+  overflow: hidden;
+  table-layout: auto;      /* or 'fixed' for equal columns */
 }
 
 td {
@@ -218,11 +224,3 @@ text-align: left;
   color: #FFFDD0;
   text-decoration: none;
 }
-
-.timeline-item a:hover {
-  text-decoration: underline;
-}
-
-.art-border {
-  border: 4px solid #333;       /* Dark border */
-  border-radius: 8px;           /* Optional rounded corners */
