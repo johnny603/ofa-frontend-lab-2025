@@ -224,25 +224,3 @@ text-align: left;
   color: #FFFDD0;
   text-decoration: none;
 }
-
-.timeline-item a:hover {
-  text-decoration: underline;
-}
-
-.art-border {
-  border: 4px solid #333;       /* Dark border */
-  border-radius: 8px;           /* Optional rounded corners */
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3); /* Optional shadow */
-}
-
-
-@keyframes fadeInUp {
-from {
-  opacity: 0;
-  transform: translateY(50px);
-}
-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-}
