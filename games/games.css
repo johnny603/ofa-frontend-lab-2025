@@ -144,3 +144,32 @@ footer {
   padding: 20px;
   box-sizing: border-box;
   z-index: 2000;
+}
+
+#instructionModal h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+#instructionModal p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  max-width: 400px;
+  text-align: center;
+}
+
+#instructionModal button {
+  font-size: 1.5rem;
+  padding: 10px 30px;
+  border: none;
+  border-radius: 8px;
+  background-color: #27ae60;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#instructionModal button:hover {
+  background-color: #2ecc71;
+}
+
