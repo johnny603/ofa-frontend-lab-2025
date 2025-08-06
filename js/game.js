@@ -488,4 +488,18 @@ function update() {
     if (gameOver)
         return;
     handleMovementInput();
-    updatePl
+    updatePlayerPosition();
+    updateCamera();
+    checkLavaDamage();
+    unloadDistantChunks(player.x, player.y, 1000);
+}
+function gameLoop() {
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+}
+function startGame() {
+    document.getElementById("instructionModal").style.display = "none";
+    loadModifiedChunks();
+    gameLoop();
+}
