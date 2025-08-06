@@ -10,7 +10,9 @@ const camera = { x: 0, y: 0, width: canvas.width, height: canvas.height };
 let flicker = 1;
 let frameCount = 0;
 let gameOver = false;
+let score: number = 0;
 
+let animationId;
 function resizeCanvas(): void {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -27,6 +29,12 @@ const chunksHardBlocks: Map<string, Set<string>> = new Map();
 const chunksSoftBlocks: Map<string, Set<string>> = new Map();
 const chunksLavaBlocks: Map<string, Set<string>> = new Map();
 
+function drawScore(): void {
+    ctx.fillStyle = "black";
+    ctx.font = "20px Arial";
+    ctx.fillText(`Cheese Copper nuggets: ${score}`, 150, 30);
+}
+
 function seededRandom(seed: number): () => number {
     return function () {
         seed = (seed * 9301 + 49297) % 233280;
@@ -41,7 +49,7 @@ function generateHardBlocksForChunk(chunkX: number, chunkY: number): Set<string>
 
     for (let i = 0; i < chunkSize; i++) {
         for (let j = 0; j < chunkSize; j++) {
-            if (random() < 0.5) {
+            if (random() < 0.1) {
                 const tileX = (chunkX * chunkSize + i) * gridSize;
                 const tileY = (chunkY * chunkSize + j) * gridSize;
                 blockSet.add(`${tileX},${tileY}`);
@@ -58,7 +66,7 @@ function generateSoftBlocksForChunk(chunkX: number, chunkY: number): Set<string>
 
     for (let i = 0; i < chunkSize; i++) {
         for (let j = 0; j < chunkSize; j++) {
-            if (random() < 0.3) {
+            if (random() < 0.5) {
                 const tileX = (chunkX * chunkSize + i) * gridSize;
                 const tileY = (chunkY * chunkSize + j) * gridSize;
                 blockSet.add(`${tileX},${tileY}`);
@@ -232,6 +240,7 @@ function attemptPunch(): void {
 
         if (soft.has(`${tx},${ty}`)) {
             soft.delete(`${tx},${ty}`);
+            score++;
 
             // Track deletion
             if (!modifiedChunks.softBlockDeletes.has(key)) {
@@ -491,8 +500,8 @@ function checkLavaDamage(): void {
     }
 
     if (isNearLava && !gameOver) {
-        if (now - player.lastLavaDamageTime >= 350) {
-            player.hp = Math.max(0, player.hp - 5);
+        if (now - player.lastLavaDamageTime >= 450) {
+            player.hp = Math.max(0, player.hp - 2);
             player.lastLavaDamageTime = now;
             if (player.hp <= 0) {
                 gameOver = true;
@@ -582,6 +591,7 @@ function draw(): void {
         // Show reset button
         const resetBtn = document.getElementById("resetBtn")!;
         resetBtn.style.display = "block";
+        drawScore(); // Draw score
     }
 }
 
@@ -600,5 +610,8 @@ function gameLoop(): void {
     requestAnimationFrame(gameLoop);
 }
 
-loadModifiedChunks();
-gameLoop();
+function startGame(): void {
+    document.getElementById("instructionModal")!.style.display = "none";
+    loadModifiedChunks();
+    gameLoop();
+}

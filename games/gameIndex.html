@@ -33,6 +33,15 @@
     </div>
   </div>
 
+    <!-- Instruction Modal -->
+    <div id="instructionModal">
+      <h2>Instructions</h2>
+      <p>Use WASD to move. Don't touch the lava adjacent</p>
+      <p>Score by punching wood for sticks before you melt</p>
+      <p>Use P to punch adjacent wood</p>
+      <button onclick="startGame()">Start</button>
+    </div>
+
   <canvas id="gameCanvas" aria-label="Game canvas" role="img"></canvas>
 
   <button
@@ -53,7 +62,7 @@
     "
     aria-hidden="true"
   >
-    Go back to floor 0?
+    Reset?
   </button>
 
   <script src="../js/game.js"></script>
